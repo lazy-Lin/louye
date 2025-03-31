@@ -63,7 +63,7 @@ def train():
     # 针对小目标优化的训练配置
     results = model.train(
         # 数据配置
-        data='data.yaml',
+        data='./dataset/data.yaml',
         # data='dataset/data.yaml',
         epochs=100,                # 增加训练轮数
         multi_scale=True,         # 启用多尺度训练
