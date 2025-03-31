@@ -1,0 +1,26 @@
+# Recommended Parameter Settings
+
+## Balanced (Best F1)
+conf_threshold: 0.35
+iou_threshold: 0.3
+Metrics: Precision=0.8528, Recall=0.4853, F1=0.6186, mAP50=0.6914
+
+## High Precision
+conf_threshold: 0.4
+iou_threshold: 0.3
+Metrics: Precision=0.8589, Recall=0.4808, F1=0.6165, mAP50=0.6933
+
+## High Recall
+conf_threshold: 0.15
+iou_threshold: 0.3
+Metrics: Precision=0.7186, Recall=0.5418, F1=0.6178, mAP50=0.6820
+
+## Best Overall Performance (mAP50)
+conf_threshold: 0.4
+iou_threshold: 0.3
+Metrics: Precision=0.8589, Recall=0.4808, F1=0.6165, mAP50=0.6933
+
+## Best Segmentation
+conf_threshold: 0.4
+iou_threshold: 0.4
+Metrics: seg_mAP50=0.6351, seg_mAP50-95=0.3792

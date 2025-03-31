@@ -12,7 +12,11 @@ def install_requirements():
             "pip", 
             "install", 
             "-r", 
+<<<<<<< HEAD
             "/root/code/louye/requirements.txt",
+=======
+            "requirements.txt", 
+>>>>>>> e6c979ee0a243be5034282773c53f534f1cd2819
             "-i", 
             "https://pypi.tuna.tsinghua.edu.cn/simple"
         ])

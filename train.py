@@ -59,7 +59,11 @@ def train():
     # 针对小目标优化的训练配置
     results = model.train(
         # 数据配置
+<<<<<<< HEAD
         data='./dataset/data.yaml',
+=======
+        data='dataset/data.yaml',
+>>>>>>> e6c979ee0a243be5034282773c53f534f1cd2819
         epochs=100,                # 增加训练轮数
         multi_scale=True,         # 启用多尺度训练
         imgsz=800,                # 降低图像分辨率以减少内存使用
