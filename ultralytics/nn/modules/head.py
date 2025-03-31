@@ -36,15 +36,13 @@ class Detect(nn.Module):
         super().__init__()
         self.mask_ratio = mask_ratio
         self.small_obj_weight = small_obj_weight
-
-        # 原分割头初始化
-        self.det = Detect(nc, channels, scales)
-        self.seg = Proto(channels[0], nc)
         self.nc = nc  # number of classes
         self.nl = len(ch)  # number of detection layers
         self.reg_max = 16  # DFL channels (ch[0] // 16 to scale 4/8/12/16/20 for n/s/m/l/x)
         self.no = nc + self.reg_max * 4  # number of outputs per anchor
         self.stride = torch.zeros(self.nl)  # strides computed during build
+        
+        # 检测头网络
         c2, c3 = max((16, ch[0] // 4, self.reg_max * 4)), max(ch[0], min(self.nc, 100))  # channels
         self.cv2 = nn.ModuleList(
             nn.Sequential(Conv(x, c2, 3), Conv(c2, c2, 3), nn.Conv2d(c2, 4 * self.reg_max, 1)) for x in ch
@@ -63,32 +61,36 @@ class Detect(nn.Module):
         )
         self.dfl = DFL(self.reg_max) if self.reg_max > 1 else nn.Identity()
 
+        # 分割头网络
+        if channels:
+            self.seg = Proto(channels[0], nc)
+        else:
+            self.seg = None
+
         if self.end2end:
             self.one2one_cv2 = copy.deepcopy(self.cv2)
             self.one2one_cv3 = copy.deepcopy(self.cv3)
 
     def forward(self, x):
         """Concatenates and returns predicted bounding boxes and class probabilities."""
-        det_out = self.det(x[:3])
-
-        # 分割掩模生成
-        pred_masks = self.seg(x[3])
-
-        # 损失计算时对小目标加权
-        if self.training:
-            loss = self.compute_loss(det_out, pred_masks, targets)
-            loss[0] *= self.small_obj_weight  # 仅对分类损失加权
-            return loss
-        return torch.cat([det_out, pred_masks], 1)
-
         if self.end2end:
             return self.forward_end2end(x)
 
+        # 检测头前向传播
         for i in range(self.nl):
             x[i] = torch.cat((self.cv2[i](x[i]), self.cv3[i](x[i])), 1)
+        
         if self.training:  # Training path
             return x
+            
+        # 推理路径
         y = self._inference(x)
+        
+        # 如果有分割头，添加分割结果
+        if self.seg is not None and len(x) > 3:
+            pred_masks = self.seg(x[3])
+            return torch.cat([y, pred_masks], 1)
+            
         return y if self.export else (y, x)
 
     def forward_end2end(self, x):

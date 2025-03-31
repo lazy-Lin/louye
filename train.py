@@ -49,6 +49,10 @@ def train():
     if torch.cuda.is_available():
         print(f"GPU: {torch.cuda.get_device_name(0)}")
         print(f"GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
+        device = 0  # 使用GPU
+    else:
+        print("No GPU available, using CPU")
+        device = 'cpu'  # 使用CPU
 
     # 实验名称 - 自动递增版本号
     exp_name = get_next_exp_name()
@@ -59,11 +63,8 @@ def train():
     # 针对小目标优化的训练配置
     results = model.train(
         # 数据配置
-<<<<<<< HEAD
         data='./dataset/data.yaml',
-=======
-        data='dataset/data.yaml',
->>>>>>> e6c979ee0a243be5034282773c53f534f1cd2819
+        # data='dataset/data.yaml',
         epochs=100,                # 增加训练轮数
         multi_scale=True,         # 启用多尺度训练
         imgsz=800,                # 降低图像分辨率以减少内存使用
@@ -78,7 +79,7 @@ def train():
         name=exp_name,
 
         # 优化器配置 - 针对小目标的学习率策略
-        device=0,
+        device=device,            # 根据硬件自动选择设备
         optimizer='AdamW',
         lr0=0.0002,               # 降低初始学习率
         lrf=0.01,
