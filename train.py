@@ -49,7 +49,7 @@ def train():
     if torch.cuda.is_available():
         print(f"GPU: {torch.cuda.get_device_name(0)}")
         print(f"GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
-        device = [0, 1]  # 使用GPU
+        device = 0  # 使用GPU
     else:
         print("No GPU available, using CPU")
         device = 'cpu'  # 使用CPU
@@ -68,7 +68,7 @@ def train():
         epochs=1000,                # 增加训练轮数
         multi_scale=True,         # 启用多尺度训练
         imgsz=1280,                # 降低图像分辨率以减少内存使用
-        batch=12,                  # 减小批次大小以减少内存使用
+        batch=4,                  # 减小批次大小以减少内存使用
         workers=8,                # 减少工作进程数
         rect=False,               # 关闭矩形训练以增加随机性
         overlap_mask=True,
