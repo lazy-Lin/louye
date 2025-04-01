@@ -49,7 +49,7 @@ def train():
     if torch.cuda.is_available():
         print(f"GPU: {torch.cuda.get_device_name(0)}")
         print(f"GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
-        device = 0  # 使用GPU
+        device = [0, 1]  # 使用GPU
     else:
         print("No GPU available, using CPU")
         device = 'cpu'  # 使用CPU
