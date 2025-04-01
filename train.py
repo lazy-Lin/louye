@@ -65,11 +65,11 @@ def train():
         # 数据配置
         data='/root/code/louye/datasets/data.yaml',
         # data='dataset/data.yaml',
-        epochs=100,                # 增加训练轮数
+        epochs=1000,                # 增加训练轮数
         multi_scale=True,         # 启用多尺度训练
-        imgsz=800,                # 降低图像分辨率以减少内存使用
-        batch=2,                  # 减小批次大小以减少内存使用
-        workers=2,                # 减少工作进程数
+        imgsz=1280,                # 降低图像分辨率以减少内存使用
+        batch=12,                  # 减小批次大小以减少内存使用
+        workers=8,                # 减少工作进程数
         rect=False,               # 关闭矩形训练以增加随机性
         overlap_mask=True,
         mask_ratio=4,             # 降低掩码比例以减少内存使用
@@ -112,7 +112,7 @@ def train():
         erasing=0.1,              # 降低随机擦除概率
         
         # 训练控制优化
-        patience=50,              # 增加早停耐心值
+        patience=70,              # 增加早停耐心值
         cos_lr=True,
         close_mosaic=40,          # 延迟关闭马赛克增强
         amp=True,                 # 启用混合精度训练
